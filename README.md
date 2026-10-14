@@ -4,93 +4,65 @@
 **Track:** Track 2 — Quantum Optimization  
 **Team:** Superposition Squad  
 **Team members:** Rahul Kumar, Alden Antony, Krishna Aggarwal  
-**Level reached:** Advanced  
+**Level reached:** Advanced — Beginner, Intermediate, and Advanced notebooks  
 **Presentation date:** 16 October 2026
 
 ## Project Overview
 
-This project explores quantum approaches to portfolio optimization through three progressive notebooks: Beginner QAOA, Intermediate Quantum Machine Learning, and Advanced QAOA.
+This project explores quantum approaches to portfolio optimization through three progressive notebooks. It combines classical reference solutions, QAOA circuit simulation, quantum-kernel machine learning, and selected experiments on IBM Quantum hardware.
 
-The experiments combine classical reference solutions, quantum circuit simulation, constraint validation, and selected executions on IBM Quantum hardware.
-
-All portfolio inputs are synthetic. The results are educational experiments and are not financial advice. No quantum advantage is claimed.
+All portfolio datasets are synthetic and intended for educational experimentation, not investment advice. The results do not establish quantum advantage.
 
 ## Notebooks
 
-| Level | Notebook | Approach |
+| Level | Notebook | Focus |
 |---|---|---|
-| Beginner | [Beginner_QAOA.ipynb](notebooks/Beginner_QAOA.ipynb) | QAOA for selecting 3 stocks from 6 |
-| Intermediate | [Intermediate_Quantum_ML.ipynb](notebooks/Intermediate_Quantum_ML.ipynb) | Quantum fidelity kernel, SVM classification, and portfolio-ranking comparison |
-| Advanced | [Advanced_QAOA.ipynb](notebooks/Advanced_QAOA.ipynb) | Constrained 20-qubit QAOA with cardinality and sector constraints |
+| Beginner | [Beginner_QAOA.ipynb](notebooks/Beginner_QAOA.ipynb) | QAOA for selecting 3 stocks from 6; classical exhaustive-search comparison and hardware execution |
+| Intermediate | [Intermediate_Quantum_ML.ipynb](notebooks/Intermediate_Quantum_ML.ipynb) | Quantum fidelity kernel, SVM classification, ranking evaluation, and a separate small hardware demonstration |
+| Advanced | [Advanced_QAOA.ipynb](notebooks/Advanced_QAOA.ipynb) | Constrained 20-qubit QAOA, Hamiltonian validation, simulation, and hardware evaluation |
 
-## Approach
+## Approach and Results
 
-### Beginner — QAOA
+### Beginner — QAOA Portfolio Optimization
 
-A six-stock problem selects exactly three stocks. Exhaustive classical search evaluates all 20 possible portfolios and identifies Stock 2, Stock 3, and Stock 6 as the reference optimum, with objective cost -0.503015.
+The problem selects exactly 3 stocks from 6, giving 20 possible portfolios. Exhaustive classical search identifies **Stock 2, Stock 3, and Stock 6** as the reference optimum, with objective cost **−0.503015**.
+
+The IBM `ibm_kingston` hardware run used 1,024 shots. It produced 609 valid portfolios (**59.47%**) and sampled the exact classical optimum 29 times (**2.83%**). The best valid sampled portfolio matched the reference optimum.
+
+**Hardware job ID:** `db7mlh0r1c5c738kspdg`
 
 ### Intermediate — Quantum Machine Learning
 
-A 12-stock problem considers 924 portfolios containing six stocks each. The notebook compares a quantum fidelity-kernel SVM with a classical RBF-kernel SVM and evaluates portfolio rankings. A separate two-qubit feature-map-style circuit was executed on IBM hardware; the complete QML pipeline was not trained on hardware.
+The notebook considers 924 portfolios formed by selecting 6 of 12 stocks. It compares a quantum fidelity-kernel SVM with a classical RBF-kernel SVM and evaluates portfolio rankings against an exhaustive-search reference.
+
+Both classifiers recorded 100% accuracy on the initial evaluated split. Across five recorded ranking evaluations, the quantum approach had mean Spearman correlation of approximately **0.94687**, while the classical comparison had approximately **0.95627**. These results do not indicate a quantum ranking advantage.
+
+A separate **two-qubit feature-map-style circuit** ran on IBM `ibm_kingston` with 512 shots. This was a hardware demonstration only; the complete 12-qubit fidelity-kernel SVM pipeline was not executed or trained on hardware.
+
+**Hardware job ID:** `db7n3e0r1c5c738ktlbg`
 
 ### Advanced — Constrained QAOA
 
-A 20-stock problem selects ten stocks subject to sector constraints. The cost Hamiltonian uses 20 logical qubits and 211 Pauli terms. Exhaustive classical search evaluates 7,776 feasible portfolios and establishes a reference optimum with cost -1.111739.
+The problem selects 10 stocks from 20, arranged as five sectors of four stocks each, with no more than two selected stocks per sector. The exhaustive classical search evaluates **7,776 feasible portfolios** and identifies the reference optimum as Stock 2, 4, 5, 7, 11, 12, 13, 16, 18, and 20, with objective cost **−1.111739**.
 
-## Results
+The cost Hamiltonian uses 20 logical qubits and 211 Pauli terms. The Hamiltonian check tested 101 bitstrings, with a maximum absolute numerical error of approximately **5.116 × 10⁻¹³**.
 
-### Beginner hardware experiment
+The simulator used 4,096 shots and produced 422 valid portfolios (**10.30%**); the exact classical optimum appeared once. The best valid simulated portfolio matched the classical optimum.
 
-- Backend: `ibm_kingston`
-- Shots: 1,024
-- Valid portfolios: 609 (59.47%)
-- Exact classical optimum observed: 29 times (2.83%)
-- Best valid portfolio matched the classical optimum.
+The IBM `ibm_kingston` hardware run used 256 shots. The transpiled circuit had depth 680 and 938 CZ gates. Only one valid portfolio was observed (**0.39%**), and the exact optimum was not observed. The best valid sampled cost was **−0.794773**, with an absolute gap of **0.316966** from the classical optimum. The parameter search reached its evaluation limit, so convergence was not established.
 
-Job ID: `db7mlh0r1c5c738kspdg`
-
-### Intermediate hardware demonstration
-
-- Backend: `ibm_kingston`
-- Circuit: separate two-qubit feature-map-style demonstration
-- Shots: 512
-- Counts: `00 = 47`, `01 = 164`, `10 = 76`, `11 = 225`
-
-Job ID: `db7n3e0r1c5c738ktlbg`
-
-These measurements are from a small hardware demonstration, not from the complete 12-qubit QML training and evaluation pipeline.
-
-### Advanced simulation
-
-- Shots: 4,096
-- Valid portfolios: 422 (10.30%)
-- Exact classical optimum observed once
-- Best valid cost: -1.111739
-
-### Advanced hardware experiment
-
-- Backend: `ibm_kingston`
-- Shots: 256
-- Compiled circuit depth: 680
-- Valid portfolios: 1 (0.39%)
-- Exact classical optimum observed: 0
-- Best valid cost: -0.794773
-- Absolute cost gap from the classical optimum: 0.316966
-
-Job ID: `db7n9iuil99s73fogb5g`
-
-The hardware results illustrate the challenges of constrained sampling with a deep circuit. Circuit depth, device noise, finite shots, and pilot parameters that were not shown to have converged may all affect performance.
+**Hardware job ID:** `db7n9iuil99s73fogb5g`
 
 ## How to Run
 
-1. Open a notebook from the `notebooks/` directory in Google Colab or a compatible Jupyter environment.
-2. Follow its setup instructions and execute the cells in order from top to bottom.
-3. Review the saved outputs for the classical reference, simulator evaluation, and hardware analysis.
-4. Hardware execution is optional for reviewing the project. Existing job IDs and saved results are included; rerunning hardware cells may consume IBM Quantum resources.
+1. Open a notebook from the [`notebooks/`](notebooks/) directory in Google Colab or a compatible Jupyter environment.
+2. Follow the setup instructions inside that notebook and execute its cells **from top to bottom**.
+3. Review the saved outputs for the classical reference, simulator, and hardware analyses.
+4. Running the notebook's IBM hardware cells is optional for reviewing the recorded results. Submitting new hardware jobs may consume IBM Quantum access or runtime.
 
-Typical dependencies include `qiskit`, `qiskit-aer`, `qiskit-ibm-runtime`, `numpy`, `scipy`, and `scikit-learn`. The Intermediate notebook may also require `qiskit-machine-learning`. Follow the package installation instructions in each notebook.
+Typical dependencies include `qiskit`, `qiskit-aer`, `qiskit-ibm-runtime`, `numpy`, `scipy`, and `scikit-learn`. The Intermediate notebook may also require `qiskit-machine-learning`; follow each notebook's setup cell for its exact environment.
 
-IBM Quantum hardware cells require appropriate IBM Quantum access and credentials. Store credentials securely in Google Colab Secrets; never commit API keys or tokens.
+Hardware execution requires IBM Quantum access and credentials. Store credentials in Google Colab Secrets or another secure secret manager; never commit API keys or tokens.
 
 ## Repository Structure
 
@@ -98,6 +70,7 @@ IBM Quantum hardware cells require appropriate IBM Quantum access and credential
 Qiskit-Fall-Fest-2026/
 ├── README.md
 ├── REFERENCES.md
+├── .gitignore
 ├── notebooks/
 │   ├── Beginner_QAOA.ipynb
 │   ├── Intermediate_Quantum_ML.ipynb
@@ -105,22 +78,24 @@ Qiskit-Fall-Fest-2026/
 └── presentation/
     ├── Final_Presentation.pdf
     └── Final_Presentation.pptx
-
+```
 
 ## Limitations
 
-- **Synthetic data:** The portfolio experiments use synthetic data rather than historical market data.
-- **Classical baseline:** The problem sizes are small enough for exhaustive classical search; no quantum advantage is established.
-- **Hardware noise:** The Advanced hardware experiment produced only 1 valid portfolio from 256 shots (0.39%).
+- **Synthetic data:** The portfolio inputs are generated for experimentation and do not represent historical market data.
+- **Classical baseline:** The current search spaces are small enough for exhaustive classical search. No quantum advantage is established.
+- **Hardware noise and sampling:** Valid portfolio rates differed between simulation and hardware, especially in the advanced experiment. The experiments do not isolate the effects of noise, circuit depth, sampling, or parameter quality.
 - **Parameter optimization:** The Advanced QAOA pilot reached its evaluation limit, so parameter convergence was not established.
-- **Intermediate hardware scope:** The IBM hardware run tested a separate two-qubit demonstration circuit, not the complete quantum-kernel SVM pipeline.
+- **Intermediate hardware scope:** The IBM hardware run was a separate two-qubit demonstration, not execution of the full quantum-kernel SVM pipeline.
 
-These experiments demonstrate quantum algorithm implementation and evaluation, not a proven advantage over classical methods.
+## References
+
+See [REFERENCES.md](REFERENCES.md) for Qiskit and IBM Quantum documentation, tutorial and code attribution, research references, and hardware job identifiers.
 
 ## AI Tools and Usage
 
-**ChatGPT (OpenAI)** was used as an AI assistant for understanding quantum computing concepts, troubleshooting code, interpreting experimental results, and drafting and refining project documentation and presentation content.
+**ChatGPT (OpenAI)** assisted with quantum-computing explanations, code troubleshooting, interpretation of experiment outputs, and drafting and refining project documentation and presentation content. The team is responsible for reviewing the implementation and verifying the reported results. Any additional AI tools used by team members should also be named here.
 
-The team is responsible for reviewing the implementation, checking reported experimental results against notebook outputs, and ensuring the accuracy of the final submission.
+## Presentation
 
-AI assistance is disclosed here for transparency. The team does not claim quantum advantage based on these experiments.
+The presentation PDF (up to 8 slides) is available at [presentation/Final_Presentation.pdf](presentation/Final_Presentation.pdf). The editable PowerPoint is included as a backup at [presentation/Final_Presentation.pptx](presentation/Final_Presentation.pptx).

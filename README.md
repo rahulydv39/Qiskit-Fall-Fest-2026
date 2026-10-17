@@ -1,6 +1,6 @@
 # Quantum Portfolio Optimization with Qiskit
 
-**Event:** Qiskit Fall Fest 2026 — IIIT Delhi  
+**Event:** Qiskit Fall Fest 2026 — IIIT Delhi(Finalists)  
 **Track:** Track 2 — Quantum Optimization  
 **Team:** Superposition Squad  
 **Team members:** Rahul Kumar, Alden Antony, Krishna Aggarwal  
